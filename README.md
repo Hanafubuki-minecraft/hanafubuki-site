@@ -50,7 +50,7 @@ npm run preview   # посмотреть собранный dist/
 
 ## DNS
 
-Все записи — в зоне `samedy.xyz` (Cloudflare). У всех четырёх — **только DNS** (серое облако): GitHub Pages сам выпускает сертификат, а Minecraft и Caddy не работают через прокси Cloudflare.
+Все записи — в DNS домена `samedy.xyz` на Porkbun (Domain Management → `samedy.xyz` → **DNS**). В поле Host пишется только поддомен, без `.samedy.xyz`; TTL — по умолчанию (600). Сертификаты выпускают сами GitHub Pages и Caddy.
 
 | Имя | Тип | Значение | Зачем |
 |---|---|---|---|
@@ -68,9 +68,9 @@ dig +short mc.samedy.xyz A               # 91.214.31.132
 dig +short map.hanafubuki.samedy.xyz A   # 91.214.31.132
 ```
 
-Если вместо CNAME `dig` показывает IP вида `104.x` / `172.67.x` — включено проксирование Cloudflare (оранжевое облако): переключи на серое. Если `mc` или `map.hanafubuki` указывают не на `91.214.31.132` — исправь A-запись.
+Если `dig` показывает `pixie.porkbun.com` или IP Porkbun — сработала парковочная wildcard-запись `*`, а нужной записи нет или в Host опечатка. Если `mc` или `map.hanafubuki` указывают не на `91.214.31.132` — исправь A-запись.
 
-> Сертификат `map.hanafubuki.samedy.xyz` — домен четвёртого уровня. Универсальный сертификат Cloudflare его не покрывает, но здесь это не важно: запись «только DNS», а сертификат выпускает сам Caddy.
+> `map.hanafubuki.samedy.xyz` — домен четвёртого уровня: в Porkbun в Host пишется `map.hanafubuki`. Сертификат на него выпускает сам Caddy.
 
 ## Дальше
 
@@ -97,12 +97,12 @@ map.hanafubuki.samedy.xyz {
 
 ## Чек-лист запуска
 
-**DNS-панель (Cloudflare, зона `samedy.xyz`)**
+**DNS (Porkbun, `samedy.xyz` → DNS)**
 
-- [ ] `hanafubuki` — CNAME → `hanafubuki-minecraft.github.io`, серое облако
-- [ ] `hf` — CNAME → `hanafubuki-minecraft.github.io`, серое облако
-- [ ] `mc` — A → `91.214.31.132`, серое облако
-- [ ] `map.hanafubuki` — A → `91.214.31.132`, серое облако (когда будет Caddy)
+- [ ] `hanafubuki` — CNAME → `hanafubuki-minecraft.github.io`
+- [ ] `hf` — CNAME → `hanafubuki-minecraft.github.io`
+- [ ] `mc` — A → `91.214.31.132`
+- [ ] `map.hanafubuki` — A → `91.214.31.132` (когда будет Caddy)
 - [ ] нет конфликтующих записей с теми же именами (старых A/AAAA/TXT)
 
 **GitHub → `hanafubuki-site` → Settings → Pages**
