@@ -76,7 +76,9 @@ dig +short map.hanafubuki.samedy.xyz A   # 91.214.31.132
 
 Пока не сделано — план на будущее.
 
-### Карта мира по HTTPS
+### Карта мира по HTTPS — готово
+
+Работает: https://map.hanafubuki.samedy.xyz (Caddy на nixserver, порты 80/443 проброшены на роутере). Как настроено:
 
 Caddy на nixserver (NixOS, Docker) перед BlueMap:
 

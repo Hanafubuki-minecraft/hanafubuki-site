@@ -14,7 +14,7 @@
     "mapFallback": "http://91.214.31.132:8123",
     "bacap": "https://modrinth.com/datapack/blazeandcaves-advancements-pack"
   },
-  "mapReady": false,
+  "mapReady": true,
   "status": {
     "javaApi": "https://api.mcsrvstat.us/3/mc.samedy.xyz",
     "bedrockApi": "https://api.mcsrvstat.us/bedrock/3/mc.samedy.xyz:19132",
