@@ -1,0 +1,24 @@
+---
+// Скриншот, который по нажатию открывается на весь экран (scripts/lightbox.ts).
+// Без JavaScript ссылка просто открывает большую картинку.
+import { Picture, getImage } from 'astro:assets';
+import { shot } from '../lib/shots';
+
+interface Props {
+  name: string;
+  alt: string;
+  group: string;
+  sizes: string;
+  widths?: number[];
+  class?: string;
+  eager?: boolean;
+  label: string;
+}
+const { name, alt, group, sizes, widths = [400, 640, 960, 1280], class: cls, eager = false, label } = Astro.props;
+const src = shot(name);
+const full = await getImage({ src, width: Math.min(src.width, 1600), format: 'webp' });
+---
+<a class:list={['shot', cls]} href={full.src} data-lightbox={group} data-caption={alt} aria-label={`${label}: ${alt}`}>
+  <Picture src={src} alt={alt} formats={['avif']} fallbackFormat="webp" widths={widths.filter((w) => w <= src.width)} sizes={sizes}
+    loading={eager ? 'eager' : 'lazy'} decoding="async" />
+</a>

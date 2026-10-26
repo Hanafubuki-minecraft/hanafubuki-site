@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import Shot from './Shot.astro';
 import config from '../config.json';
 import { md } from '../lib/text';
 
@@ -12,6 +13,7 @@ const L = config.links;
 const clientData = {
   status: { ...config.status },
   text: { ...t.status, copied: t.a11y.copied, copyFailed: t.a11y.copyFailed },
+  gallery: { close: t.gallery.close, prev: t.gallery.prev, next: t.gallery.next, galleryTitle: t.gallery.title },
 };
 const ruleTabs = [
   ['general', t.rules.general],
@@ -116,6 +118,11 @@ const ruleTabs = [
     </div>
   </section>
 
+  <figure class="insert">
+    <Shot name={t.inserts.afterJoin} alt={t.shots[t.inserts.afterJoin]} group="insert" sizes="100vw" widths={[640, 960, 1280, 1600]} label={t.gallery.open} />
+    <figcaption class="insert__cap">{t.shots[t.inserts.afterJoin]}</figcaption>
+  </figure>
+
   <section class="section section--container" id="features" aria-labelledby="features-title">
     <div class="wrap">
       <header class="sh">
@@ -136,7 +143,25 @@ const ruleTabs = [
     </div>
   </section>
 
-  <section class="section" id="rules" aria-labelledby="rules-title">
+  <section class="section" id="gallery" aria-labelledby="gallery-title">
+    <div class="wrap">
+      <header class="sh">
+        <h2 id="gallery-title">{t.gallery.title}</h2>
+        <p>{t.gallery.lead}</p>
+      </header>
+      <ul class="gallery" role="list">
+        {t.gallery.items.map((name: string, i: number) => (
+          <li class:list={['gallery__item', { 'gallery__item--big': i === 0 }]}>
+            <Shot name={name} alt={t.shots[name]} group="gallery" label={t.gallery.open}
+              sizes={i === 0 ? '(min-width: 840px) 700px, 100vw' : '(min-width: 840px) 350px, 50vw'} />
+            <span class="gallery__cap" aria-hidden="true">{t.shots[name]}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--container" id="rules" aria-labelledby="rules-title">
     <div class="wrap wrap--text">
       <header class="sh">
         <h2 id="rules-title">{t.rules.title}</h2>
@@ -162,7 +187,12 @@ const ruleTabs = [
     </div>
   </section>
 
-  <section class="section section--container" id="pass" aria-labelledby="pass-title">
+  <figure class="insert">
+    <Shot name={t.inserts.beforePass} alt={t.shots[t.inserts.beforePass]} group="insert" sizes="100vw" widths={[640, 960, 1280, 1600]} label={t.gallery.open} />
+    <figcaption class="insert__cap">{t.shots[t.inserts.beforePass]}</figcaption>
+  </figure>
+
+  <section class="section" id="pass" aria-labelledby="pass-title">
     <div class="wrap wrap--text">
       <header class="sh">
         <h2 id="pass-title">{t.pass.title}</h2>
@@ -190,12 +220,17 @@ const ruleTabs = [
     </div>
   </section>
 
-  <section class="section" id="map" aria-labelledby="map-title">
+  <section class="section section--container" id="map" aria-labelledby="map-title">
     <div class="wrap wrap--text">
       <div class="card card--outlined mapcard">
         <span class="avatar avatar--lg"><Icon name="map" /></span>
         <h2 id="map-title">{t.map.title}</h2>
         <p class="muted">{t.map.text}</p>
+        <ul class="mapshots" role="list">
+          {t.map.shots.map((name: string) => (
+            <li><Shot name={name} alt={t.shots[name]} group="map" sizes="(min-width: 760px) 220px, 33vw" widths={[240, 400, 640]} label={t.gallery.open} /></li>
+          ))}
+        </ul>
         {config.mapReady ? (
           <p><a class="btn btn--filled" href={L.map}>{t.map.open} <Icon name="open" /></a></p>
         ) : (
@@ -211,7 +246,7 @@ const ruleTabs = [
     </div>
   </section>
 
-  <section class="section section--container" id="faq" aria-labelledby="faq-title">
+  <section class="section" id="faq" aria-labelledby="faq-title">
     <div class="wrap wrap--text">
       <header class="sh">
         <h2 id="faq-title">{t.faq.title}</h2>
@@ -257,11 +292,13 @@ const ruleTabs = [
   import { startStatus } from '../scripts/status';
   import { initCopy } from '../scripts/copy';
   import { initTabs } from '../scripts/tabs';
+  import { initLightbox } from '../scripts/lightbox';
   import { initAppbar } from '../scripts/appbar';
 
   const data = JSON.parse(document.getElementById('client-data')!.textContent || '{}');
   initCopy(data.text);
   initTabs();
+  initLightbox(data.gallery);
   initAppbar();
   startStatus(data.status, data.text);
   const canvas = document.querySelector<HTMLCanvasElement>('canvas.petals');

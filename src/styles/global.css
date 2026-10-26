@@ -292,12 +292,65 @@ html { -webkit-tap-highlight-color: transparent; }
   font: 400 1rem/2.25rem var(--plain); color: var(--on-surface); white-space: pre-wrap; overflow-wrap: anywhere;
 }
 
+/* Скриншоты */
+.shot { display: block; position: relative; overflow: hidden; border-radius: var(--shape-lg); background: var(--surface-container); }
+.shot picture, .shot img { display: block; width: 100%; height: 100%; }
+.shot img { object-fit: cover; transition: transform .4s var(--ease); }
+@media (hover: hover) { .shot:hover img { transform: scale(1.03); } }
+.shot:focus-visible { outline-offset: 3px; }
+
+/* Широкие вставки между секциями */
+.insert { position: relative; margin: 0; }
+.insert .shot { border-radius: 0; aspect-ratio: 4 / 3; }
+@media (min-width: 600px) { .insert .shot { aspect-ratio: 16 / 7; } }
+@media (min-width: 1200px) { .insert .shot { aspect-ratio: auto; height: 440px; } }
+.insert__cap {
+  position: absolute; left: var(--gutter); bottom: 16px; max-width: calc(100% - 2 * var(--gutter));
+  padding: 6px 12px; border-radius: var(--shape-sm); pointer-events: none;
+  background: rgba(27, 21, 48, .82); color: var(--on-surface); font: 500 .875rem/1.25rem var(--plain);
+}
+@media (min-width: 1200px) { .insert__cap { left: calc((100% - 1080px) / 2 + var(--gutter)); } }
+
+/* Галерея */
+.gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.gallery__item { position: relative; }
+.gallery__item .shot { aspect-ratio: 16 / 10; }
+.gallery__item--big { grid-column: 1 / -1; }
+.gallery__item--big .shot { aspect-ratio: 16 / 9; }
+@media (min-width: 840px) {
+  .gallery { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .gallery__item--big { grid-column: span 2; grid-row: span 2; }
+  .gallery__item--big .shot { aspect-ratio: auto; height: 100%; }
+}
+.gallery__cap {
+  position: absolute; left: 8px; bottom: 8px; right: 8px; pointer-events: none;
+  display: none; padding: 4px 10px; border-radius: var(--shape-sm); width: fit-content; max-width: calc(100% - 16px);
+  background: rgba(27, 21, 48, .82); font: 500 .8125rem/1.25rem var(--plain);
+}
+.gallery__item--big .gallery__cap { display: block; }
+@media (min-width: 840px) { .gallery__cap { display: block; } }
+
+/* Полноэкранный просмотр */
+.lightbox { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(12, 9, 22, .96); color: var(--on-surface); }
+.lightbox::backdrop { background: rgba(12, 9, 22, .96); }
+.lightbox__figure { margin: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 64px 12px 24px; }
+.lightbox__img { max-width: 100%; max-height: calc(100dvh - 140px); object-fit: contain; border-radius: var(--shape-md); }
+.lightbox__cap { font: 400 .9375rem/1.4 var(--plain); color: var(--on-surface-variant); text-align: center; }
+.lightbox__btn { position: absolute; color: var(--on-surface); background: rgba(46, 38, 71, .9); }
+.lightbox__close { top: 12px; right: 12px; }
+.lightbox__prev, .lightbox__next { top: 50%; transform: translateY(-50%); }
+.lightbox__prev { left: 12px; }
+.lightbox__next { right: 12px; }
+@media (max-width: 599px) { .lightbox__prev, .lightbox__next { top: auto; bottom: 16px; transform: none; } }
+
 /* Карта */
 .mapcard { text-align: center; padding: 40px 24px; }
 .mapcard .avatar { margin: 0 auto 16px; }
 .mapcard h2 { font: 500 clamp(1.75rem, 5vw, 2.25rem)/1.2 var(--brand); margin-bottom: 8px; }
 .mapcard p:has(.btn) { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; }
 .mapcard .chip--tertiary { margin-left: 0; }
+.mapshots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; list-style: none; margin: 4px 0 24px; padding: 0; }
+.mapshots .shot { aspect-ratio: 1; border-radius: var(--shape-md); }
 
 /* FAQ — список с раскрытием */
 .faq { padding: 0; overflow: hidden; }

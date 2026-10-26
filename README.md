@@ -30,6 +30,8 @@ npm run preview   # посмотреть собранный dist/
 
 **Как обновить тексты.** Правь `src/content/site.ru.json` прямо на GitHub (карандаш → Commit) — через минуту сайт пересоберётся сам. В текстах работает мини-разметка: `**жирный**`, `*курсив*`, `` `команда` ``; `{host}` и `{port}` подставляются из `src/config.json`. Источник фактов — [INFO.md](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/blob/main/INFO.md), голос — [STYLE.md](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/blob/main/STYLE.md).
 
+**Скриншоты.** Лежат в `src/assets/screens/` (копии `screenshots/web/*.webp` из [hanafubuki-brand](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/tree/main/screenshots)). Подписи — в `site.ru.json` → `shots`, какие кадры в галерее — `gallery.items` (первый — крупный), широкие вставки между секциями — `inserts`, превью карты — `map.shots`. Новый кадр: положи файл в `src/assets/screens/`, добавь подпись в `shots` и имя файла (без расширения) в нужный список. Размеры и форматы (AVIF + WebP) Astro делает сам при сборке.
+
 **Карта.** Когда `map.hanafubuki.samedy.xyz` заработает по HTTPS, поставь в `src/config.json` `"mapReady": true` — пометка «скоро» исчезнет, кнопка начнёт вести на карту.
 
 **Английская версия позже.** Скопируй `site.ru.json` в `site.en.json`, переведи и создай `src/pages/en/index.astro` с теми же строками, что в `src/pages/index.astro`, но с импортом `site.en.json`.
