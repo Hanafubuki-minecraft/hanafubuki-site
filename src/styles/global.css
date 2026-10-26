@@ -106,7 +106,9 @@ html { -webkit-tap-highlight-color: transparent; }
   content: ''; position: absolute; inset: 0; border-radius: inherit; background: currentColor;
   opacity: 0; transition: opacity .2s var(--ease); z-index: -1; pointer-events: none;
 }
-.btn:hover::before, .icon-btn:hover::before, .tab:hover::before, .faq summary:hover::before { opacity: .08; }
+@media (hover: hover) {
+  .btn:hover::before, .icon-btn:hover::before, .tab:hover::before, .faq summary:hover::before { opacity: .08; }
+}
 .btn:focus-visible::before, .icon-btn:focus-visible::before, .tab:focus-visible::before, .faq summary:focus-visible::before,
 .btn:active::before, .icon-btn:active::before, .tab:active::before { opacity: .12; }
 
@@ -245,7 +247,7 @@ html { -webkit-tap-highlight-color: transparent; }
 /* Правила — табы M3 */
 .tabs__list { display: flex; border-bottom: 1px solid var(--outline-variant); margin-bottom: 16px; }
 .tab {
-  flex: 1; height: 48px; border: 0; background: transparent; cursor: pointer; border-radius: 0;
+  flex: 1; height: 48px; border: 0; background: transparent; cursor: pointer; border-radius: var(--shape-md) var(--shape-md) 0 0;
   color: var(--on-surface-variant); font: 500 .875rem/1.25rem var(--plain); letter-spacing: .01em;
 }
 .tab[aria-selected="true"] { color: var(--primary); }
@@ -298,7 +300,12 @@ html { -webkit-tap-highlight-color: transparent; }
 .mapcard .chip--tertiary { margin-left: 0; }
 
 /* FAQ — список с раскрытием */
-.faq { padding: 8px 0; }
+.faq { padding: 0; overflow: hidden; }
+.faq summary { border-radius: var(--shape-md); }
+.faq details:first-child summary { border-radius: var(--shape-xl) var(--shape-xl) var(--shape-md) var(--shape-md); }
+.faq details:last-child:not([open]) summary { border-radius: var(--shape-md) var(--shape-md) var(--shape-xl) var(--shape-xl); }
+.faq details:only-child:not([open]) summary { border-radius: var(--shape-xl); }
+.faq summary:focus-visible { outline-offset: -3px; }
 .faq details + details { border-top: 1px solid var(--outline-variant); }
 .faq summary {
   display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px;
