@@ -94,6 +94,12 @@ code {
 .grid { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
 @media (min-width: 720px) { .grid--2 { grid-template-columns: 1fr 1fr; gap: 16px; } }
 
+/* Нажатие не выделяет текст и не мигает синим на телефонах */
+html { -webkit-tap-highlight-color: transparent; }
+.btn, .icon-btn, .tab, .chip, .faq summary, .appbar__brand {
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: manipulation;
+}
+
 /* State layer: полупрозрачный слой цвета текста при hover/focus/press */
 .btn, .icon-btn, .tab, .faq summary, .chip { position: relative; isolation: isolate; }
 .btn::before, .icon-btn::before, .tab::before, .faq summary::before {
