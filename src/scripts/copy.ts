@@ -1,6 +1,6 @@
 // Кнопки «скопировать»: data-copy="текст" или data-copy-from="id элемента".
 export function initCopy(text: Record<string, string>) {
-  const toast = document.querySelector<HTMLElement>('.toast');
+  const toast = document.querySelector<HTMLElement>('.snackbar');
   let hide = 0;
 
   const say = (msg: string) => {

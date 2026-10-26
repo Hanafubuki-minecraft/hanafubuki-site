@@ -4,7 +4,7 @@
 
 Сайт Minecraft-сервера Hanafubuki — **https://hanafubuki.samedy.xyz** (коротко: https://hf.samedy.xyz).
 
-Одна статичная страница на [Astro](https://astro.build): без UI-библиотек, аналитики, трекеров и cookie-баннеров. Шрифты (Lora + Inter, с кириллицей) лежат на самом сайте, CSS встроен в HTML — ни одного блокирующего запроса.
+Одна статичная страница на [Astro](https://astro.build): без UI-библиотек, аналитики, трекеров и cookie-баннеров. Оформление — Material Design 3 (тёмная схема из палитры STYLE.md, без градиентов). Шрифты (Lora для заголовков + Google Sans, оба с кириллицей) лежат на самом сайте, CSS встроен в HTML — ни одного блокирующего запроса.
 
 ## Локальный запуск
 
@@ -23,9 +23,9 @@ npm run preview   # посмотреть собранный dist/
 |---|---|
 | Все тексты страницы | `src/content/site.ru.json` |
 | Адреса, порт, ссылки, флаги (`mapReady`) | `src/config.json` |
-| Цвета, шрифты, отступы | `src/styles/global.css` (палитра — из [STYLE.md](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/blob/main/STYLE.md)) |
+| Цвета (роли M3), шрифты, отступы | `src/styles/global.css` (палитра — из [STYLE.md](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/blob/main/STYLE.md)) |
 | Разметка секций | `src/components/Landing.astro` |
-| Лепестки, статус, «скопировать» | `src/scripts/` |
+| Лепестки, статус, «скопировать», табы правил | `src/scripts/` |
 | Логотип, favicon, OG-картинка | `public/` (взяты из [hanafubuki-brand](https://github.com/Hanafubuki-minecraft/hanafubuki-brand)) |
 
 **Как обновить тексты.** Правь `src/content/site.ru.json` прямо на GitHub (карандаш → Commit) — через минуту сайт пересоберётся сам. В текстах работает мини-разметка: `**жирный**`, `*курсив*`, `` `команда` ``; `{host}` и `{port}` подставляются из `src/config.json`. Источник фактов — [INFO.md](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/blob/main/INFO.md), голос — [STYLE.md](https://github.com/Hanafubuki-minecraft/hanafubuki-brand/blob/main/STYLE.md).

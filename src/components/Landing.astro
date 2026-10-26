@@ -13,42 +13,56 @@ const clientData = {
   status: { ...config.status },
   text: { ...t.status, copied: t.a11y.copied, copyFailed: t.a11y.copyFailed },
 };
+const ruleTabs = [
+  ['general', t.rules.general],
+  ['server', t.rules.server],
+  ['discord', t.rules.discord],
+] as const;
 ---
 <a class="skip" href="#main">{t.a11y.skip}</a>
 
-<header class="hero" id="top">
-  <canvas class="petals" aria-hidden="true"></canvas>
-  <nav class="topnav" aria-label={t.a11y.nav}>
-    <a class="topnav__brand" href="#top"><span class="mark" aria-hidden="true">❀</span> Hanafubuki</a>
-    <ul>
-      {t.nav.map((n: any) => <li><a href={n.href}>{n.label}</a></li>)}
+<header class="appbar">
+  <nav class="appbar__inner" aria-label={t.a11y.nav}>
+    <a class="appbar__brand" href="#top">
+      <img src="/favicon.png" width="32" height="32" alt="" />
+      <span>Hanafubuki</span>
+    </a>
+    <ul class="appbar__nav">
+      {t.nav.map((n: any) => <li><a class="btn btn--text" href={n.href}>{n.label}</a></li>)}
     </ul>
+    <a class="btn btn--filled btn--sm appbar__cta" href={L.discord}>{t.hero.apply}</a>
   </nav>
-  <div class="hero__inner">
-    <img class="hero__logo" src="/logo.svg" width="1024" height="1024" alt={t.a11y.logoAlt} fetchpriority="high" />
-    <p class="hero__kanji" lang="ja">{t.hero.kanji} <span lang="ru">{t.hero.kanjiNote}</span></p>
-    <h1 class="hero__title">{t.hero.title}</h1>
-    <p class="hero__subtitle">{t.hero.subtitle}</p>
-    <p class="hero__platforms"><span class="mark" aria-hidden="true">❀</span> {t.hero.platforms}</p>
-    <div class="hero__actions">
-      <a class="btn btn--primary" href={L.discord}>{t.hero.apply}</a>
-      <a class="btn btn--ghost" href="#join">{t.hero.join}</a>
-    </div>
-  </div>
 </header>
 
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <canvas class="petals" aria-hidden="true"></canvas>
+  <div class="hero__inner">
+    <img class="hero__logo" src="/logo.svg" width="1024" height="1024" alt={t.a11y.logoAlt} fetchpriority="high" />
+    <h1 class="hero__title" id="hero-title">{t.hero.title}</h1>
+    <p class="hero__kanji"><span lang="ja">{t.hero.kanji}</span> · {t.hero.kanjiNote}</p>
+    <p class="hero__subtitle">{t.hero.subtitle}</p>
+    <ul class="chips" role="list">
+      {t.hero.chips.map((c: string) => <li class="chip">{c}</li>)}
+    </ul>
+    <div class="hero__actions">
+      <a class="btn btn--filled btn--lg" href={L.discord}>{t.hero.apply}</a>
+      <a class="btn btn--outlined btn--lg" href="#join">{t.hero.join}</a>
+    </div>
+  </div>
+</section>
+
 <main id="main">
-  <section class="section status" id="status" aria-labelledby="status-title">
+  <section class="section section--tight" id="status" aria-labelledby="status-title">
     <div class="wrap">
       <h2 id="status-title" class="visually-hidden">{t.status.title}</h2>
-      <div class="status__grid">
-        {[['java', t.status.java], ['bedrock', t.status.bedrock]].map(([key, label]) => (
-          <div class="status__card" data-status={key} data-state="loading">
-            <p class="status__head">
-              <span class="status__dot" aria-hidden="true"></span>
+      <div class="grid grid--2">
+        {[['java', t.status.java, 'desktop'], ['bedrock', t.status.bedrock, 'phone']].map(([key, label, icon]) => (
+          <div class="card card--filled status" data-status={key} data-state="loading">
+            <div class="status__head">
+              <span class="avatar"><Icon name={icon} /></span>
               <span class="status__label">{label}</span>
-              <span class="status__state">{t.status.loading}</span>
-            </p>
+              <span class="status__chip"><span class="status__dot" aria-hidden="true"></span><span class="status__state">{t.status.loading}</span></span>
+            </div>
             <dl class="status__facts">
               <div><dt>{t.status.players}</dt><dd data-field="players">—</dd></div>
               <div><dt>{t.status.version}</dt><dd data-field="version">—</dd></div>
@@ -56,58 +70,66 @@ const clientData = {
           </div>
         ))}
       </div>
-      <p class="status__note">{t.status.updated}</p>
-      <noscript><p class="status__note">{t.status.noscript}</p></noscript>
+      <p class="caption center">{t.status.updated}</p>
+      <noscript><p class="caption center">{t.status.noscript}</p></noscript>
     </div>
   </section>
 
   <section class="section" id="join" aria-labelledby="join-title">
     <div class="wrap">
-      <h2 id="join-title"><span class="mark" aria-hidden="true">❀</span> {t.join.title}</h2>
-      <p class="callout" set:html={md(t.join.note)} />
-      <div class="cards cards--2">
-        <article class="card join-card">
-          <h3>{t.join.java.title}</h3>
-          <p class="field-label" id="java-addr-label">{t.join.java.addressLabel}</p>
-          <div class="copyline">
-            <code aria-labelledby="java-addr-label">{host}</code>
-            <button class="btn btn--small" type="button" data-copy={host}>
-              <Icon name="copy" /> {t.join.copy}<span class="visually-hidden">: {host}</span>
-            </button>
+      <header class="sh">
+        <h2 id="join-title">{t.join.title}</h2>
+        <p>{t.join.lead}</p>
+      </header>
+      <div class="grid grid--2">
+        <article class="card card--filled join">
+          <div class="join__head"><span class="avatar"><Icon name="desktop" /></span><h3>{t.join.java.title}</h3></div>
+          <ol class="join__steps">{t.join.java.steps.map((s: string) => <li set:html={md(s)} />)}</ol>
+          <div class="fields">
+            <div class="field">
+              <div><p class="field__label">{t.join.java.addressLabel}</p><p class="field__value">{host}</p></div>
+              <button class="icon-btn" type="button" data-copy={host} aria-label={`${t.join.copy}: ${host}`}><Icon name="copy" /></button>
+            </div>
+            <p class="caption">{t.join.java.portNote}</p>
           </div>
-          <ol class="steps">{t.join.java.steps.map((s: string) => <li set:html={md(s)} />)}</ol>
         </article>
-        <article class="card join-card">
-          <h3>{t.join.bedrock.title}</h3>
-          <p class="field-label" id="be-addr-label">{t.join.bedrock.addressLabel}</p>
-          <div class="copyline">
-            <code aria-labelledby="be-addr-label">{host}</code>
-            <button class="btn btn--small" type="button" data-copy={host}>
-              <Icon name="copy" /> {t.join.copy}<span class="visually-hidden">: {host}</span>
-            </button>
+        <article class="card card--filled join">
+          <div class="join__head"><span class="avatar"><Icon name="phone" /></span><h3>{t.join.bedrock.title}</h3></div>
+          <ol class="join__steps">{t.join.bedrock.steps.map((s: string) => <li set:html={md(s)} />)}</ol>
+          <div class="fields">
+            <div class="field">
+              <div><p class="field__label">{t.join.bedrock.addressLabel}</p><p class="field__value">{host}</p></div>
+              <button class="icon-btn" type="button" data-copy={host} aria-label={`${t.join.copy}: ${host}`}><Icon name="copy" /></button>
+            </div>
+            <div class="field">
+              <div><p class="field__label">{t.join.bedrock.portLabel}</p><p class="field__value">{bedrockPort}</p></div>
+              <button class="icon-btn" type="button" data-copy={String(bedrockPort)} aria-label={`${t.join.copy}: ${bedrockPort}`}><Icon name="copy" /></button>
+            </div>
           </div>
-          <p class="field-label" id="be-port-label">{t.join.bedrock.portLabel}</p>
-          <div class="copyline">
-            <code aria-labelledby="be-port-label">{bedrockPort}</code>
-            <button class="btn btn--small" type="button" data-copy={String(bedrockPort)}>
-              <Icon name="copy" /> {t.join.copy}<span class="visually-hidden">: {bedrockPort}</span>
-            </button>
-          </div>
-          <ol class="steps">{t.join.bedrock.steps.map((s: string) => <li set:html={md(s)} />)}</ol>
         </article>
+      </div>
+      <div class="banner">
+        <Icon name="lock" />
+        <p set:html={md(t.join.note)} />
+        <a class="btn btn--text" href={L.discord}>{t.hero.apply}</a>
       </div>
     </div>
   </section>
 
-  <section class="section" id="features" aria-labelledby="features-title">
+  <section class="section section--container" id="features" aria-labelledby="features-title">
     <div class="wrap">
-      <h2 id="features-title"><span class="mark" aria-hidden="true">❀</span> {t.features.title}</h2>
-      <ul class="cards cards--features" role="list">
+      <header class="sh">
+        <h2 id="features-title">{t.features.title}</h2>
+        <p>{t.features.lead}</p>
+      </header>
+      <ul class="grid grid--features" role="list">
         {t.features.items.map((f: any) => (
-          <li class="card feature">
-            <span class="feature__icon"><Icon name={f.icon} /></span>
-            <h3>{f.title}</h3>
-            {f.text && <p set:html={md(f.text)} />}
+          <li class="card card--elevated feature">
+            <span class="avatar avatar--lg"><Icon name={f.icon} /></span>
+            <div>
+              <h3>{f.title}</h3>
+              {f.text && <p set:html={md(f.text)} />}
+            </div>
           </li>
         ))}
       </ul>
@@ -115,82 +137,89 @@ const clientData = {
   </section>
 
   <section class="section" id="rules" aria-labelledby="rules-title">
-    <div class="wrap">
-      <h2 id="rules-title"><span class="mark" aria-hidden="true">❀</span> {t.rules.title}</h2>
-      <div class="cards cards--rules">
-        <article class="card rules">
-          <h3>{t.rules.general.title}</h3>
-          <p class="muted">{t.rules.general.lead}</p>
-          <ol>{t.rules.general.items.map((s: string) => <li set:html={md(s)} />)}</ol>
-          {t.rules.general.notes.map((s: string) => <p class="note"><em set:html={md(s)} /></p>)}
-        </article>
-        <article class="card rules">
-          <h3>{t.rules.server.title}</h3>
-          <ol>{t.rules.server.items.map((s: string) => <li set:html={md(s)} />)}</ol>
-          <p class="rules__after">{t.rules.server.after}</p>
-          {t.rules.server.notes.map((s: string) => <p class="note"><em set:html={md(s)} /></p>)}
-        </article>
-        <article class="card rules">
-          <h3>{t.rules.discord.title}</h3>
-          <p class="muted">{t.rules.discord.lead}</p>
-          <ol>{t.rules.discord.items.map((s: string) => <li set:html={md(s)} />)}</ol>
-        </article>
+    <div class="wrap wrap--text">
+      <header class="sh">
+        <h2 id="rules-title">{t.rules.title}</h2>
+        <p>{t.rules.lead}</p>
+      </header>
+      <div class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist" aria-label={t.rules.tabsLabel} hidden>
+          {ruleTabs.map(([key, r], i) => (
+            <button class="tab" type="button" role="tab" id={`tab-${key}`} aria-controls={`rules-${key}`}
+              aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{r.tab}</button>
+          ))}
+        </div>
+        {ruleTabs.map(([key, r]) => (
+          <div class="card card--outlined rules" id={`rules-${key}`} role="tabpanel" aria-labelledby={`tab-${key}`}>
+            <h3>{r.title}</h3>
+            {'lead' in r && r.lead && <p class="rules__lead">{r.lead}</p>}
+            <ol class="rules__list">{r.items.map((s: string) => <li set:html={md(s)} />)}</ol>
+            {'after' in r && r.after && <p class="rules__after">{r.after}</p>}
+            {'notes' in r && r.notes?.map((s: string) => <p class="rules__note" set:html={md(s)} />)}
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="section" id="pass" aria-labelledby="pass-title">
-    <div class="wrap wrap--narrow">
-      <h2 id="pass-title"><span class="mark" aria-hidden="true">❀</span> {t.pass.title}</h2>
-      {t.pass.text.map((s: string) => <p class="lead" set:html={md(s)} />)}
+  <section class="section section--container" id="pass" aria-labelledby="pass-title">
+    <div class="wrap wrap--text">
+      <header class="sh">
+        <h2 id="pass-title">{t.pass.title}</h2>
+      </header>
+      {t.pass.text.map((s: string) => <p class="body-lg" set:html={md(s)} />)}
 
-      <h3>{t.pass.stepsTitle}</h3>
-      <ol class="flow">
-        {t.pass.steps.map((s: string) => <li>{s}</li>)}
+      <h3 class="title-lg">{t.pass.stepsTitle}</h3>
+      <ol class="stepper">
+        {t.pass.steps.map((s: string) => <li><span class="stepper__label">{s}</span></li>)}
       </ol>
       <p class="muted">{t.pass.stepsAfter}</p>
 
-      <div class="card form-card">
-        <div class="form-card__head">
+      <div class="card card--filled form">
+        <div class="form__head">
           <h3 id="form-title">{t.pass.formTitle}</h3>
-          <button class="btn btn--small" type="button" data-copy-from="form-text">
+          <button class="btn btn--tonal btn--sm" type="button" data-copy-from="form-text">
             <Icon name="copy" /> {t.pass.copy}
           </button>
         </div>
-        <p class="muted">{t.pass.formHint}</p>
-        <pre id="form-text" aria-labelledby="form-title" tabindex="0"><code>{t.pass.form}</code></pre>
+        <p class="caption">{t.pass.formHint}</p>
+        <pre id="form-text" class="form__text" aria-labelledby="form-title" tabindex="0">{t.pass.form}</pre>
       </div>
 
-      <p class="center"><a class="btn btn--primary btn--big" href={L.discord}>{t.pass.apply}</a></p>
+      <p class="center"><a class="btn btn--filled btn--lg" href={L.discord}><Icon name="discord" /> {t.pass.apply}</a></p>
     </div>
   </section>
 
   <section class="section" id="map" aria-labelledby="map-title">
-    <div class="wrap wrap--narrow center">
-      <h2 id="map-title"><span class="mark" aria-hidden="true">❀</span> {t.map.title}</h2>
-      <p class="muted">{t.map.text}</p>
-      {config.mapReady ? (
-        <p><a class="btn btn--primary" href={L.map}>{t.map.open}</a></p>
-      ) : (
-        <>
-          <p>
-            <span class="btn btn--disabled" aria-disabled="true">
-              {t.map.open} <span class="badge">{t.map.soon}</span>
-            </span>
-          </p>
-          <p class="muted small">{t.map.soonNote} <a href={L.mapFallback}>{L.mapFallback.replace(/^https?:\/\//, '')}</a></p>
-        </>
-      )}
+    <div class="wrap wrap--text">
+      <div class="card card--outlined mapcard">
+        <span class="avatar avatar--lg"><Icon name="map" /></span>
+        <h2 id="map-title">{t.map.title}</h2>
+        <p class="muted">{t.map.text}</p>
+        {config.mapReady ? (
+          <p><a class="btn btn--filled" href={L.map}>{t.map.open} <Icon name="open" /></a></p>
+        ) : (
+          <>
+            <p>
+              <span class="btn btn--disabled" aria-disabled="true">{t.map.open}</span>
+              <span class="chip chip--tertiary">{t.map.soon}</span>
+            </p>
+            <p class="caption">{t.map.soonNote} <a href={L.mapFallback}>{L.mapFallback.replace(/^https?:\/\//, '')}</a></p>
+          </>
+        )}
+      </div>
     </div>
   </section>
 
-  <section class="section" id="faq" aria-labelledby="faq-title">
-    <div class="wrap wrap--narrow">
-      <h2 id="faq-title"><span class="mark" aria-hidden="true">❀</span> {t.faq.title}</h2>
-      <div class="faq">
+  <section class="section section--container" id="faq" aria-labelledby="faq-title">
+    <div class="wrap wrap--text">
+      <header class="sh">
+        <h2 id="faq-title">{t.faq.title}</h2>
+      </header>
+      <div class="faq card card--filled">
         {t.faq.items.map((f: any) => (
           <details>
-            <summary>{f.q}</summary>
+            <summary><span>{f.q}</span><Icon name="chevron" class="faq__chevron" /></summary>
             <p set:html={md(f.a)} />
           </details>
         ))}
@@ -200,18 +229,26 @@ const clientData = {
 </main>
 
 <footer class="footer">
-  <div class="wrap">
-    <p class="footer__brand"><span class="mark" aria-hidden="true">❀</span> Hanafubuki · <span lang="ja">花吹雪</span></p>
+  <div class="wrap footer__inner">
+    <div class="footer__brand">
+      <img src="/favicon.png" width="40" height="40" alt="" loading="lazy" />
+      <div>
+        <p class="footer__name">Hanafubuki</p>
+        <p class="caption" lang="ja">花吹雪</p>
+      </div>
+    </div>
     <ul class="footer__links" role="list">
-      <li><a href={L.discord}><Icon name="discord" /> {t.footer.discord}</a></li>
-      <li><a href={L.github}><Icon name="github" /> {t.footer.github}</a> <span class="dim">· {t.footer.githubNote}</span></li>
+      <li><a class="btn btn--text" href={L.discord}><Icon name="discord" /> {t.footer.discord}</a></li>
+      <li><a class="btn btn--text" href={L.github}><Icon name="github" /> {t.footer.github}</a></li>
     </ul>
-    <p class="small muted"><a href={L.bacap}>{t.footer.credits}</a></p>
-    <p class="small dim">{t.footer.disclaimer}</p>
+    <div class="footer__legal">
+      <p class="caption"><a href={L.github}>{t.footer.githubNote}</a> · <a href={L.bacap}>{t.footer.credits}</a></p>
+      <p class="caption">{t.footer.disclaimer}</p>
+    </div>
   </div>
 </footer>
 
-<div class="toast" role="status" aria-live="polite"></div>
+<div class="snackbar" role="status" aria-live="polite"></div>
 
 <script type="application/json" id="client-data" set:html={JSON.stringify(clientData)} />
 
@@ -219,9 +256,13 @@ const clientData = {
   import { startPetals } from '../scripts/petals';
   import { startStatus } from '../scripts/status';
   import { initCopy } from '../scripts/copy';
+  import { initTabs } from '../scripts/tabs';
+  import { initAppbar } from '../scripts/appbar';
 
   const data = JSON.parse(document.getElementById('client-data')!.textContent || '{}');
   initCopy(data.text);
+  initTabs();
+  initAppbar();
   startStatus(data.status, data.text);
   const canvas = document.querySelector<HTMLCanvasElement>('canvas.petals');
   if (canvas) startPetals(canvas);
